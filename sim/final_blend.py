@@ -1,7 +1,7 @@
 import numpy as np, matplotlib
 matplotlib.use("Agg"); import matplotlib.pyplot as plt
 plt.rcParams.update({"font.family":"DejaVu Sans","font.size":10})
-K=12; tau=1e-6; L=6.8e-6; C=470e-9; DCR=0.02; Rz,Cz=3.3,2.2e-6; Rdc=2.2e6
+K=12*20e3/(20e3+1e3); tau=1e-6; L=6.8e-6; C=470e-9; DCR=0.02; Rz,Cz=3.3,2.2e-6; Rdc=2.2e6
 f=np.logspace(1,6,40000); s=2j*np.pi*f; i_=lambda x:np.argmin(abs(f-x))
 def H(R,sv=s): Yp=sv*C+1/(Rz+1/(sv*Cz))+(0 if R is None else 2/R); Zp=1/Yp; return Zp/(sv*L+DCR+Zp)
 def ladder_Y(Zs_list, Csh, sv=s):

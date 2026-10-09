@@ -99,19 +99,12 @@ def half(mir):
     # --- integrator network (between bus and VOUT node at x=20)
     xo = 20
     W((18, Y(14)), (xo, Y(14))); dot(xo, Y(14))
-    W((xo, Y(14)), (xo, Y(21.4)))
+    W((xo, Y(14)), (xo, Y(18.5)))
     T(17.85, Y(14), fout, ha="right", size=8)
     rows = [(17.0, "C", "Ci 2,2 нФ C0G"), (18.5, "R", "Rdc 2,2 М")]
     for yy, k, lab in rows:
         dot(12, Y(yy)); dot(xo, Y(yy))
         element((12, Y(yy)), (xo, Y(yy)), k, lab, side, body=1.5, lab_off=.45)
-    # clamp: two anti-parallel branches (diode + zener)
-    for yy, dk, zk in ((20.0, "D", "Zr"), (21.4, "Dr", "Z")):
-        dot(12, Y(yy))
-        element((12, Y(yy)), (16, Y(yy)), dk, "", body=1.0)
-        element((16, Y(yy)), (xo, Y(yy)), zk, "", body=1.0)
-    W((xo, Y(20.0)), (xo, Y(21.4)))
-    T(16, Y(22.2), "1N4148 + BZX84-C3V0 (×2, встречно)", size=8)
 
     # --- protection diodes to rails
     W((12, Y(24.4)), (10, Y(24.4))); dot(12, Y(24.4))
@@ -121,10 +114,18 @@ def half(mir):
     T(10, Y(22.7), "−15 В" if top else "+15 В", size=8)
     T(9.4, Y(24.4), "BAV99", ha="right", size=8)
 
-    # --- output to chip
-    element((xo, Y(14)), (22.6, Y(14)), "R", "Rout 100", side, body=1.1)
-    element((22.6, Y(14)), (25.4, Y(14)), "C", "Cc 10 мкФ", side)
-    W((25.4, Y(14)), (26, Y(14)))
+    # --- output to chip: Rout -> input limiter (to gnd) -> Cc
+    element((xo, Y(14)), (22.3, Y(14)), "R", "Rout 1,0 к", side, body=1.1)
+    W((22.3, Y(14)), (23.3, Y(14))); dot(22.8, Y(14))
+    W((22.8, Y(14)), (22.8, Y(14.6)))
+    W((22.35, Y(14.6)), (23.25, Y(14.6)))
+    element((22.35, Y(14.6)), (22.35, Y(16.4)), "D" if top else "Dr", "", body=0.9)
+    element((23.25, Y(14.6)), (23.25, Y(16.4)), "Dr" if top else "D", "", body=0.9)
+    W((22.35, Y(16.4)), (23.25, Y(16.4))); W((22.8, Y(16.4)), (22.8, Y(16.8)))
+    gnd(22.8, Y(16.8), up=top)
+    T(21.8, Y(15.5), "VD: 5×BAS416\nв каждой ветви", ha="right", size=7.5)
+    element((23.3, Y(14)), (25.6, Y(14)), "C", "Cc 10 мкФ", side)
+    W((25.6, Y(14)), (26, Y(14)))
     T(26.15, Y(14), cin_, ha="left", size=8)
 
     # --- chip output -> LC -> speaker
@@ -195,7 +196,8 @@ notes = [
     "4. Ci, Cff, Cffi — только C0G/NP0. Cfb, Cin, Cc, Cf, Cz — полипропилен; Cff и Cfb на 100 В.",
     "5. Rz: на полной мощности синусом выше ~5 кГц перегревается — ВЧ-тесты на пониженном уровне.",
     "6. /RESET держать в «0» ≈ 0,5 с после подачи питания (заряд Cfb/Cin). Бутстрепы, развязка PVDD/GVDD и разводка — по даташиту/EVM.",
-    "7. K ≈ 12 и задержка чипа ≈ 1 мкс — допущения расчёта; перед финалом измерить АЧХ/ФЧХ объекта без внешней петли.",
+    "7. Ограничитель входа U2 (VD, порог ≈ ±3 В при допустимых 7 В п-п) — после Rout, не поперёк Ci: утечка и ёмкость стабилитрона там исказили бы интегратор.",
+    "8. K ≈ 12 и задержка чипа ≈ 1 мкс — допущения расчёта; перед финалом измерить АЧХ/ФЧХ объекта без внешней петли.",
 ]
 for i, s in enumerate(notes):
     T(-1.5, -5.0 - 0.62 * i, s, ha="left", size=9.5 if i else 10.5, w="bold" if i == 0 else "normal")

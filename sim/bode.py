@@ -1,7 +1,7 @@
 import numpy as np, matplotlib
 matplotlib.use("Agg"); import matplotlib.pyplot as plt
 plt.rcParams.update({"font.family":"DejaVu Sans","font.size":10})
-K=12; tau=1e-6; L=6.8e-6; C=470e-9; DCR=0.02; Rz,Cz=3.3,2.2e-6
+K=12*20e3/(20e3+1e3); tau=1e-6; L=6.8e-6; C=470e-9; DCR=0.02; Rz,Cz=3.3,2.2e-6
 Rin=2e3; Rfb=40.2e3; Rdc=2.2e6; G=Rfb/Rin
 Cff,Rs=75e-12,2.0e3; Cffi,Rsi=1.5e-9,100.0
 f=np.logspace(1,6,40000); s=2j*np.pi*f
