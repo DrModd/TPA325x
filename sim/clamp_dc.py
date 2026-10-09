@@ -16,7 +16,8 @@ def inj(Vout, r1=10e3, r2=3.0e3, dT=0.0):
         if im+vbe/R96>Ic: hi=im
         else: lo=im
     return Ic, im
-for dT in (0,40):
-    print(f"ΔT={dT} °C")
-    for V in (2.1,2.4,2.6,2.8,3.0,3.2):
-        Ic,im=inj(V,dT=dT); print(f"  Vвых {V:.1f} В: ток T26 {Ic*1e6:8.2f} мкА, впрыск в узел A {im*1e6:8.3f} мкА")
+if __name__ == "__main__":
+    for dT in (0,40):
+        print(f"ΔT={dT} °C")
+        for V in (2.1,2.4,2.6,2.8,3.0,3.2):
+            Ic,im=inj(V,dT=dT); print(f"  Vвых {V:.1f} В: ток T26 {Ic*1e6:8.2f} мкА, впрыск в узел A {im*1e6:8.3f} мкА")
