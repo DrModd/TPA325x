@@ -1,9 +1,9 @@
 """Вариант с прямой подачей: U1 — интегратор (только ошибка), U3 — суммирующий FDA (×1 от U1, ×kff от входа),
-Rout 470 Ом → диодный ограничитель → Cc → TPA3255 (Rвх 20 кОм)."""
+Rout 100 Ом → Cc → TPA3255 (Rвх 20 кОм). U3 на ±4,8 В сам ограничивает вход чипа (≈ ±3,2 В)."""
 import numpy as np, itertools
 import double_blend as db
 from double_blend import f, s, i_, H, Ypost, Ypre, Zint, loads, tau
-Rout=470; K=12*20e3/(20e3+Rout)
+Rout=100; K=12*20e3/(20e3+Rout)
 Rsrc, Cin, Ra, Rb = 470, 22e-6, 768, 768
 R3=4.99e3; Rfb_dc=40e3
 Zi=Zint(1.8e-9,33e3,22e-9,1.0e6)
@@ -32,7 +32,7 @@ if __name__=="__main__":
     Rff=R3*K/20.0; print("K=%.2f, Rff расч. = %.0f Ом"%(K,Rff))
     band=(f>=20)&(f<=2e4)
     best=[]
-    for Cdi,Cm,Rf in itertools.product((1e-9,2.2e-9,3.3e-9,4.7e-9,6.8e-9,8.2e-9),(2.2e-9,3.3e-9,4.7e-9,6.8e-9,10e-9),(2.94e3,)):
+    for Cdi,Cm,Rf in itertools.product((1e-9,2.2e-9,3.3e-9,4.7e-9,6.8e-9,8.2e-9),(2.2e-9,3.3e-9,4.7e-9,6.8e-9,10e-9),(3.0e3,)):
         o=run(Cdi,Cm,Rf); dev=max(np.abs(x['cl'][band]).max() for x in o)
         best.append((dev,Cdi,Cm,Rf,o))
     best.sort(key=lambda b:b[0])
