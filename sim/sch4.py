@@ -119,7 +119,7 @@ def half(mir):
     T(-0.4, Y(14), vin, ha="right", size=10, w="bold")
     dot(-0.2, Y(14))
     W((-0.2, Y(14)), (-0.2, Y(15.2)))
-    T(-0.2, Y(15.55), "FF → U3", size=8, c=BLUE, w="bold")
+    T(-0.2, Y(15.55), "FF → U3 низ" if top else "FF → U3 верх", size=8, c=BLUE, w="bold")
     element((-0.2, Y(14)), (1.6, Y(14)), "R", "Rsrc 470", side, body=1.0)
     dot(1.6, Y(14))
     element((1.6, Y(14)), (4.2, Y(14)), "C", "Cin 2,2 мкФ\nплёнка", side)
