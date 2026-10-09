@@ -1,0 +1,5 @@
+sim/*.png
+sim/*.pdf
+sim/*.svg
+sim/*.npy
+__pycache__/
